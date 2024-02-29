@@ -70,6 +70,22 @@ public abstract class BacktrackingSearch <X, V> {
      */
     public boolean AC3(Queue<Arc<X>> arcs)
     {
+        while(arcs.size() != 0)
+        {
+            Arc<X> tempArc = arcs.remove();
+
+            if(revise(tempArc.head, tempArc.tail))
+            {
+                if(getAllVariables().get(tempArc.head).domain().size() == 0)
+                {
+                    return false;
+                }
+                for (X v : problem.getNeighborsOf(tempArc.head))
+                {
+                    arcs.add(new Arc<>(v, tempArc.head));
+                }
+            }
+        }
         return true;
     }
 
@@ -81,8 +97,10 @@ public abstract class BacktrackingSearch <X, V> {
     public boolean initAC3(){
         //TODO: create a queue that contains all the arcs; call AC3() with this queue.
         Queue<Arc<X>> arcs = new LinkedList<>();
-        for(X v : allVariables.keySet()){
-            for(X n : problem.getNeighborsOf(v)){
+        for(X v : allVariables.keySet())
+        {
+            for(X n : problem.getNeighborsOf(v))
+            {
                 arcs.add(new Arc<>(v,n));
             }
         }
